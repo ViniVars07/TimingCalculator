@@ -16,8 +16,8 @@ def Timer(mrng_time, am_checkout, am_checkin):
     mrng_half_time = findInterval(mrng_hour, mrng_min, am_hour_out, am_min_out)
     free_time = findInterval(am_hour_out, am_min_out, am_hour_in, am_min_in)
 
-    tot_time = 9 * 60
-    rem_time = tot_time - (mrng_half_time + free_time)
+    tot_time = 8 * 60
+    rem_time = tot_time - mrng_half_time
     rem_time_hr = int(rem_time / 60)
     rem_time_min = rem_time % 60
 
@@ -26,10 +26,11 @@ def Timer(mrng_time, am_checkout, am_checkin):
     if out_min >= 60:
         out_min -= 60
         out_hour += 1
-
+    # print(int(mrng_half_time/60), mrng_half_time%60, int(free_time/60), free_time%60, rem_time_hr, rem_time_min)
     return f"{out_hour}:{out_min:02d}"
 
-# Home route - GET for form, POST for result
+# print(Timer("9:58", "13:24", "13:55"))
+
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
@@ -38,8 +39,7 @@ def home():
         am_checkin = request.form['am_checkin']
         result = Timer(mrng_time, am_checkout, am_checkin)
         return render_template('index.html', result=result)
-
     return render_template('index.html', result=None)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=5000, debug=True)
